@@ -1,0 +1,17 @@
+---
+ansible_host: 192.168.10.11
+ansible_network_os: ios
+ 
+interfaces:
+ - name: ethernet 1/0
+   description: Connect to PE01
+   ipv4: 10.10.101.1 255.255.255.0
+ - name: ethernet 1/1
+   description: Connect to PE02
+   ipv4: 10.10.201.1 255.255.255.0
+ - name: loopback 0
+   description: Loopback of P01
+   ipv4: 1.1.1.1 255.255.255.255
+ 
+ospf_process: 1
+ospf_area: 0

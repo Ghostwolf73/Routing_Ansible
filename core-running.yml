@@ -1,0 +1,36 @@
+---
+- name: Running config...
+  hosts: core
+  connection: network_cli
+  gather_facts: false
+ 
+  tasks:
+    - name: Configure ip address on interface and OSPF...
+      ios_config:
+        lines:
+          - interface {{ item.name }}
+          - description {{ item.description }}
+          - ip address {{ item.ipv4 }}
+          - no shutdown
+        after:
+          - ip ospf {{ ospf_process }} area {{ ospf_area }}
+          - mpls ip
+          - mpls label protocol ldp
+          - router ospf {{ ospf_process }}
+          - mpls ldp autoconfig
+          - do write
+      with_items:
+        - "{{ interfaces }}"
+ 
+    - name: Configure BGP...
+      ios_config:
+        lines:
+          - router bgp {{ item.id }}
+          - neighbor {{ item.neighbor }} remote-as 1
+          - neighbor {{ item.neighbor }} update-source {{ item.loopback }}
+          - no auto-summary
+          - address-family vpnv4
+          - neighbor {{ item.neighbor }} activate
+      with_items:
+        - '{{ BGP_config }}'
+      when: BGP_config is defined

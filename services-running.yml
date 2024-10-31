@@ -1,0 +1,35 @@
+---
+- name: Running config...
+  hosts: PE
+  connection: network_cli
+  gather_facts: false
+ 
+  tasks:
+    - name: Configure VRF...
+      ios_config:
+        parents: ip vrf {{ item.name }}
+        lines:
+          - rd {{ item.dis1 }}:{{ item.dis2 }}
+          - route-target {{ item.type }} {{ item.target1 }}:{{ item.target2 }}
+      with_items: "{{ VRF }}"
+      when: VRF is defined
+ 
+    - name: Configure Redistribute an VRF interface connect...
+      ios_config:
+        lines:
+          - interface {{ item.Cus_int}}
+          - no shutdown
+          - ip vrf forwarding {{ item.Cus_vrf }}
+          - description {{ item.Cus_description }}
+          - ip address {{ item.Cus_ipv4 }}
+          - ip ospf {{ item.CE_ospf_process }} area {{ item.CE_ospf_area }}
+        after:
+          - router bgp {{ item.BGP_id }}
+          - address-family ipv4 vrf {{ item.Cus_vrf }}
+          - redistribute ospf {{ item.CE_ospf_process }}
+          - router ospf {{ item.CE_ospf_process }}
+          - redistribute bgp {{ item.BGP_id }} subnets
+          - do write
+      with_items:
+        - '{{ Customers }}'
+      when: Customers is defined

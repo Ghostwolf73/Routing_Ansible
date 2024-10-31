@@ -1,0 +1,17 @@
+---
+ - name: Running config for Customers...
+   hosts: customer
+   connection: network_cli
+   gather_facts: false
+ 
+   tasks:
+     - name: Configure ip address on interface...
+       ios_config:
+         lines:
+           - interface {{ item.name }}
+           - ip address {{ item.ipv4 }}
+           - no shutdown
+           - description {{ item.description }}
+         after:
+           - ip ospf {{ item.ospf_process }} area {{ item.ospf_area }}
+       loop: "{{ interfaces[inventory_hostname] }}"

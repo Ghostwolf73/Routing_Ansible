@@ -1,0 +1,58 @@
+---
+ansible_host: 192.168.10.52
+ansible_network_os: ios
+ 
+# For Core...
+interfaces:
+ - name: ethernet 0/1
+   description: Connect to P02
+   ipv4: 10.10.202.2 255.255.255.0
+ - name: ethernet 1/1
+   description: Connect to P01
+   ipv4: 10.10.201.2 255.255.255.0
+ - name: ethernet 0/2
+   description: Connect to P03
+   ipv4: 10.10.203.2 255.255.255.0
+ - name: loopback 0
+   description: Loopback of PE02
+   ipv4: 5.5.5.5 255.255.255.255
+ 
+ospf_process: 1
+ospf_area: 0
+ 
+BGP_config:
+ - id: 1
+   neighbor: 4.4.4.4
+   loopback: l0
+ 
+# For Customer...
+VRF:
+ - name: A_Connect
+   dis1: 4
+   dis2: 4
+   type: both
+   target1: 4
+   target2: 4
+ - name: B_Connect
+   dis1: 2
+   dis2: 2
+   type: both
+   target1: 4
+   target2: 4
+ 
+Customers:
+ - Cus_int: ethernet 1/2
+   Cus_vrf: A_Connect
+   Cus_description: Connect to Customer_A_HCM
+   Cus_ipv4: 192.168.102.1 255.255.255.0
+   BGP_id: 1
+   CE_ospf_process: 2
+   CE_ospf_area: 2
+ 
+ - Cus_int: ethernet 1/3
+   Cus_vrf: B_Connect
+   Cus_description: Connect to Customer_B_HCM
+   Cus_ipv4: 192.168.202.1 255.255.255.0
+   BGP_id: 1
+   CE_ospf_process: 3
+   CE_ospf_area: 3

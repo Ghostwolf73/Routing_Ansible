@@ -1,0 +1,52 @@
+---
+ansible_user: solo
+ansible_ssh_pass: cisco123
+ansible_network_os: ios
+ 
+interfaces:
+ Customer_A_HN:
+   - name: ethernet 1/1
+     description: Connect to HCM
+     ipv4: 192.168.101.10 255.255.255.0
+     ospf_process: 2
+     ospf_area: 2
+   - name: loopback 0
+     description: Loopback of A_HN
+     ipv4: 10.10.10.10 255.255.255.255
+     ospf_process: 2
+     ospf_area: 2
+ Customer_A_HCM:
+   - name: ethernet 1/1
+     description: Connect to HN
+     ipv4: 192.168.102.10 255.255.255.0
+     ospf_process: 2
+     ospf_area: 2
+   - name: loopback 0
+     description: Loopback of A_HCM
+     ipv4: 20.20.20.20 255.255.255.255
+     ospf_process: 2
+     ospf_area: 2
+ 
+ Customer_B_HN:
+   - name: ethernet 1/1
+     description: Connect to HCM
+     ipv4: 192.168.201.10 255.255.255.0
+     ospf_process: 3
+     ospf_area: 3
+   - name: loopback 0
+     description: Loopback of B_HN
+     ipv4: 10.10.10.10 255.255.255.255
+     ospf_process: 3
+     ospf_area: 3
+ Customer_B_HCM:
+   - name: ethernet 1/1
+     description: Connect to HN
+     ipv4: 192.168.202.10 255.255.255.0
+     ospf_process: 3
+     ospf_area: 3
+ 
+   - name: loopback 0
+     description: Loopback of B_HCM
+     ipv4: 20.20.20.20 255.255.255.255
+     ospf_process: 3
+     ospf_area: 3
