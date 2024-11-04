@@ -1,35 +1,56 @@
 ---
+#Task 1
+#name variable is where we define the current play helping us with logging and organization.
 - name: Running config...
+#specifying the group of devices we are working with for this playbook
   hosts: PE
   connection: network_cli
+#disbables gathering of facts which are system details, by so doing we speed up the playbook
   gather_facts: false
  
   tasks:
     - name: Configure VRF...
+    #defining the module which is used to send configs to cisco IOS devices
       ios_config:
+      #specifying a parent level config kevek of ip vrf and it's name
         parents: ip vrf {{ item.name }}
         lines:
+        #configuring Router Distinguisher for the VRF to help us distinguish routes for different customers
           - rd {{ item.dis1 }}:{{ item.dis2 }}
+        #configure the VRF route targets which tells vrf which routes it can import/export to and from other VRFs
           - route-target {{ item.type }} {{ item.target1 }}:{{ item.target2 }}
+      #Loops through each item in the VRF list, applying the configs for each VRF defined
       with_items: "{{ VRF }}"
+      #ensure that the task only runs if VRF is defined
       when: VRF is defined
- 
+
+ #Task 2
+ #Task description
     - name: Configure Redistribute an VRF interface connect...
       ios_config:
         lines:
+        #configuring customer interface which is specified by the cus_int 
           - interface {{ item.Cus_int}}
           - no shutdown
+          #assigns the interface to a specified VRF
           - ip vrf forwarding {{ item.Cus_vrf }}
           - description {{ item.Cus_description }}
+          #IP configuration for the interface
           - ip address {{ item.Cus_ipv4 }}
+          #add the interface to an ospf process and area
           - ip ospf {{ item.CE_ospf_process }} area {{ item.CE_ospf_area }}
+
+        #after means we running these commands after the interface has been configured
         after:
+        #Your standard BGP config
           - router bgp {{ item.BGP_id }}
           - address-family ipv4 vrf {{ item.Cus_vrf }}
           - redistribute ospf {{ item.CE_ospf_process }}
           - router ospf {{ item.CE_ospf_process }}
           - redistribute bgp {{ item.BGP_id }} subnets
           - do write
+      #loop through each item in the customers list
       with_items:
         - '{{ Customers }}'
+      #only run if customers is defined ie not empty
       when: Customers is defined

@@ -1,7 +1,9 @@
 ---
+#define the host IP and the OS
 ansible_host: 192.168.10.12
 ansible_network_os: ios
- 
+
+#interfaces IP configuration 
 interfaces:
  - name: ethernet 0/2
    description: Connect to PE01
@@ -12,6 +14,7 @@ interfaces:
  - name: loopback 0
    description: Loopback of P02
    ipv4: 2.2.2.2 255.255.255.255
- 
+
+#OSPF process definition and area configuration
 ospf_process: 1
 ospf_area: 0

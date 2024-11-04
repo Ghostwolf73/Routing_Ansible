@@ -1,4 +1,6 @@
 ---
+
+#define our usernam, ansible become is for privilege escalation and the cisco "enable" which we also add it's password
   ansible_user: solo
   ansible_ssh_pass: cisco123
   ansible_become: yes

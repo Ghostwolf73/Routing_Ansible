@@ -2,11 +2,14 @@
 ansible_user: solo
 ansible_ssh_pass: cisco123
 ansible_network_os: ios
+
+#define our usernam, ansible become is for privilege escalation and the cisco "enable" which we also add it's password
 ansible_become: yes
 ansible_become_method: enable
 ansible_become_password: cisco123
 
- 
+
+#Interfaces configurations including loopbacks and OSPF per interface 
 interfaces:
  Customer_A_HN:
    - name: ethernet 1/1

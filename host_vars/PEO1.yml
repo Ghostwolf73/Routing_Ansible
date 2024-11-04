@@ -1,8 +1,9 @@
 ---
+#define the host IP and the OS
 ansible_host: 192.168.10.51
 ansible_network_os: ios
  
-#For Core...
+#Interfaces configs
 interfaces:
  - name: ethernet 0/2
    description: Connect to P02
@@ -16,16 +17,18 @@ interfaces:
  - name: loopback 0
    description: Loopback of PE01
    ipv4: 4.4.4.4 255.255.255.255
- 
+
+#OSPF area and process configs
 ospf_process: 1
 ospf_area: 0
- 
+
+#BGP configs 
 BGP_config:
  - id: 1
    neighbor: 5.5.5.5
    loopback: l0
  
-# For Customer...
+#VRFs configs
 VRF:
  - name: A_Connect
    dis1: 4
@@ -40,15 +43,20 @@ VRF:
    target1: 4
    target2: 4
  
+#defining varibles for interfaces, VRFs, BGP and OSPF
 Customers:
+#specifying which customer connection eth1/1 is connected to
  - Cus_int: ethernet 1/1
+ #specifying the VRF instance for each customer and IP address for that interface which connects to the customer
    Cus_vrf: A_Connect
    Cus_description: Connect to Customer_A_HN
    Cus_ipv4: 192.168.101.1 255.255.255.0
+  #Dynamic routing configs
    BGP_id: 1
    CE_ospf_process: 2
    CE_ospf_area: 2
  
+ #same as the above just different interfaces
  - Cus_int: ethernet 1/2
    Cus_vrf: B_Connect
    Cus_description: Connect to Customer_B_HN

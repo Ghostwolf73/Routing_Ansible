@@ -56,3 +56,5 @@ Customers:
    BGP_id: 1
    CE_ospf_process: 3
    CE_ospf_area: 3
+
+   #for comments read from PEO1 script file, the process is the same just differnt routers.
